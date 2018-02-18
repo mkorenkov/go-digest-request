@@ -107,12 +107,12 @@ func (r *DigestRequest) makeParts(req *http.Request) (map[string]string, error) 
 		}
 	}
 	// check algorithm if not set to default value
-	if val, ok := parts[algorithm]; !ok {
+	if _, ok := parts[algorithm]; !ok {
 		parts[algorithm] = "MD5"
-		log.Info("parts are")
-		log.Info(string(len(parts)))
-		log.Info("wanted are")
-		log.Info(string(len(wanted)))
+	}
+	// rfc 2617 and 7616 are violeted here by silly web develeopers...
+	if _, ok := parts[opaque]; !ok {
+		parts[opaque] = ""
 	}
 
 	if len(parts) != len(wanted) {
