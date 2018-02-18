@@ -53,6 +53,7 @@ const qop = "qop"
 const realm = "realm"
 const wwwAuthenticate = "Www-Authenticate"
 
+// TODO: make algorithm optional with default walue "MD5"
 var wanted = []string{algorithm, nonce, opaque, qop, realm}
 
 // New makes a DigestRequest instance
@@ -103,6 +104,10 @@ func (r *DigestRequest) makeParts(req *http.Request) (map[string]string, error) 
 				parts[w] = strings.Split(r, `"`)[1]
 			}
 		}
+	}
+	// check algorithm if not set to default value
+	if val, ok := parts[algorithm]; !ok {
+		parts[algorithm] = "MD5"
 	}
 
 	if len(parts) != len(wanted) {
